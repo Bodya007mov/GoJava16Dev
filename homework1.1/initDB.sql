@@ -1,4 +1,6 @@
+drop type if exists sex_type cascade;
 create type sex_type as enum('male', 'female');
+drop type if exists level_type cascade;
 create type level_type as enum('junior', 'middle', 'senior');
 
 drop table if exists developers cascade;

@@ -2,6 +2,7 @@ package com.movchan.jdbc.dao;
 
 import com.movchan.jdbc.domain.Developer;
 import com.movchan.jdbc.domain.Sex;
+import com.movchan.jdbc.error.EntityNotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,10 +13,9 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
 
     @Override
     public List<Developer> getAll() {
-
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("select * from developers");
+            Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("select id as developer_id, name as developer_name, age, sex, salary from developers;");
             List<Developer> developers = new ArrayList<>();
             while (resultSet.next()) {
                 Developer developer = getDeveloperFromResultSet(resultSet);
@@ -23,22 +23,22 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
             }
             return developers;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new EntityNotFoundException("Cannot get developers from database. Caused by: " + e.getMessage());
         }
     }
 
     @Override
     public Optional<Developer> getById(Long id) {
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-            PreparedStatement statement = connection.prepareStatement("select * from developers where id = ?")) {
+            PreparedStatement statement = connection.prepareStatement("select id as developer_id, name as developer_name, age, sex, salary from developers where id = ?;")) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Developer developer = getDeveloperFromResultSet(resultSet);
-                return Optional.of(developer);
+                return Optional.ofNullable(developer);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new EntityNotFoundException("Cannot get developer from database. Caused by: " + e.getMessage());
         }
         return Optional.empty();
     }
@@ -46,11 +46,11 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
     @Override
     public void deleteById(Long id) {
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-            PreparedStatement statement = connection.prepareStatement("delete from developers where id = ?")) {
+            PreparedStatement statement = connection.prepareStatement("delete from developers where id = ?;")) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new EntityNotFoundException("Cannot delete developer from database. Caused by: " + e.getMessage());
         }
     }
 
@@ -65,10 +65,10 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
             statement.executeUpdate();
             if (statement.getGeneratedKeys().next()) {
                 Long st = statement.getGeneratedKeys().getLong(1);
-                return Optional.of(st);
+                return Optional.ofNullable(st);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new EntityNotFoundException("Cannot create developer in database. Caused by: " + e.getMessage());
         }
         return Optional.empty();
     }
@@ -76,7 +76,7 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
     @Override
     public void update(Developer developer) {
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-            PreparedStatement statement = connection.prepareStatement("update developers set name = ?, age = ?, sex = cast(? as sex_type), salary = ? where id = ?")) {
+            PreparedStatement statement = connection.prepareStatement("update developers set name = ?, age = ?, sex = cast(? as sex_type), salary = ? where id = ?;")) {
             statement.setString(1, developer.getName());
             statement.setInt(2, developer.getAge());
             statement.setString(3, developer.getSex().toString().toLowerCase());
@@ -84,17 +84,56 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
             statement.setLong(5, developer.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new EntityNotFoundException("Cannot update developer in database. Caused by: " + e.getMessage());
         }
     }
 
     private Developer getDeveloperFromResultSet(ResultSet resultSet) throws SQLException {
         Developer developer = new Developer();
-        developer.setId(resultSet.getLong("id"));
-        developer.setName(resultSet.getString("name"));
+        developer.setId(resultSet.getLong("developer_id"));
+        developer.setName(resultSet.getString("developer_name"));
         developer.setAge(resultSet.getInt("age"));
         developer.setSex(Sex.valueOf(resultSet.getString("sex").toUpperCase()));
         developer.setSalary(resultSet.getDouble("salary"));
         return developer;
+    }
+
+    public List<Developer> getJavaDevelopers() {
+        try (Connection connection = DriverManager.getConnection(URL, username, password);
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
+                    "from developers d " +
+                    "         join developers_skills ds on d.id = ds.developer_id " +
+                    "         join skills s on ds.skill_id = s.id " +
+                    "         join languages l on s.language_id = l.id " +
+                    "where l.name = 'Java';");
+            List<Developer> developers = new ArrayList<>();
+            while(resultSet.next()) {
+                Developer developer = getDeveloperFromResultSet(resultSet);
+                developers.add(developer);
+            }
+            return developers;
+        } catch (SQLException e) {
+            throw new EntityNotFoundException("Cannot get developers from database. Caused by: " + e.getMessage());
+        }
+    }
+
+    public List<Developer> getMiddleDevelopers() {
+        try (Connection connection = DriverManager.getConnection(URL, username, password);
+             Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
+                    "from developers d " +
+                    "         join developers_skills ds on d.id = ds.developer_id " +
+                    "         join skills s on ds.skill_id = s.id " +
+                    "where s.level = 'middle';");
+            List<Developer> developers = new ArrayList<>();
+            while(resultSet.next()) {
+                Developer developer = getDeveloperFromResultSet(resultSet);
+                developers.add(developer);
+            }
+            return developers;
+        } catch (SQLException e) {
+            throw new EntityNotFoundException("Cannot get developers from database. Caused by: " + e.getMessage());
+        }
     }
 }

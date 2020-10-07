@@ -7,22 +7,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Developer {
+public class Company {
 
     private Long id;
 
     private String name;
 
-    private Integer age;
+    private String phone;
 
-    private Sex sex;
-
-    private Double salary;
-
-    public Developer(String name, Integer age, Sex sex, Double salary) {
+    public Company(String name, String phone) {
         this.name = name;
-        this.age = age;
-        this.sex = sex;
-        this.salary = salary;
+        this.phone = phone;
     }
 }

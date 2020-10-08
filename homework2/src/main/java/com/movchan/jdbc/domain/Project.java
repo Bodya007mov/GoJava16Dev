@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -21,9 +22,9 @@ public class Project {
 
     private Long customerId;
 
-    private Double cost;
+    private BigDecimal cost;
 
-    public Project(String name, Date creationDate, Long companyId, Long customerId, Double cost) {
+    public Project(String name, Date creationDate, Long companyId, Long customerId, BigDecimal cost) {
         this.name = name;
         this.creationDate = creationDate;
         this.companyId = companyId;

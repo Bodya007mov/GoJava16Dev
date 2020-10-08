@@ -4,7 +4,6 @@ import com.movchan.jdbc.domain.Developer;
 import com.movchan.jdbc.domain.Project;
 import com.movchan.jdbc.domain.Sex;
 import com.movchan.jdbc.error.EntityNotFoundException;
-import com.movchan.jdbc.service.dto.DeveloperDTO;
 import com.movchan.jdbc.service.dto.ProjectDTO;
 
 import java.sql.*;
@@ -69,7 +68,7 @@ public class ProjectDAO extends GenericDAO<Project, Long> {
             statement.setString(2, String.format("%td %<tm %<tY", project.getCreationDate()));
             statement.setLong(3, project.getCompanyId());
             statement.setLong(4, project.getCustomerId());
-            statement.setDouble(5, project.getCost());
+            statement.setBigDecimal(5, project.getCost());
             statement.executeUpdate();
             if (statement.getGeneratedKeys().next()) {
                 Long st = statement.getGeneratedKeys().getLong(1);
@@ -89,7 +88,7 @@ public class ProjectDAO extends GenericDAO<Project, Long> {
             statement.setString(2, String.format("%td %<tm %<tY", project.getCreationDate()));
             statement.setLong(3, project.getCompanyId());
             statement.setLong(4, project.getCustomerId());
-            statement.setDouble(5, project.getCost());
+            statement.setBigDecimal(5, project.getCost());
             statement.setLong(6, project.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -104,7 +103,7 @@ public class ProjectDAO extends GenericDAO<Project, Long> {
         project.setCreationDate(resultSet.getDate("creation_date"));
         project.setCompanyId(resultSet.getLong("company_id"));
         project.setCustomerId(resultSet.getLong("customer_id"));
-        project.setCost(resultSet.getDouble("cost"));
+        project.setCost(resultSet.getBigDecimal("cost"));
         return project;
     }
 
@@ -144,7 +143,7 @@ public class ProjectDAO extends GenericDAO<Project, Long> {
                 developer.setName(resultSet.getString("developer_name"));
                 developer.setAge(resultSet.getInt("age"));
                 developer.setSex(Sex.valueOf(resultSet.getString("sex").toUpperCase()));
-                developer.setSalary(resultSet.getDouble("salary"));
+                developer.setSalary(resultSet.getBigDecimal("salary"));
                 developers.add(developer);
             }
             return developers;

@@ -4,6 +4,7 @@ import com.movchan.jdbc.domain.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -18,13 +19,13 @@ public class DeveloperDTO {
 
     private Sex sex;
 
-    private Double salary;
+    private BigDecimal salary;
 
     private List<Long> skills;
 
     private List<Long> projects;
 
-    public DeveloperDTO(String name, Integer age, Sex sex, Double salary, List<Long> skills, List<Long> projects) {
+    public DeveloperDTO(String name, Integer age, Sex sex, BigDecimal salary, List<Long> skills, List<Long> projects) {
         this.name = name;
         this.age = age;
         this.sex = sex;

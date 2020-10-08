@@ -4,6 +4,7 @@ import com.movchan.jdbc.dao.DeveloperDAO;
 import com.movchan.jdbc.domain.Developer;
 import com.movchan.jdbc.domain.DeveloperProjectKey;
 import com.movchan.jdbc.domain.DeveloperSkillKey;
+import com.movchan.jdbc.domain.Level;
 import com.movchan.jdbc.error.EntityNotFoundException;
 import com.movchan.jdbc.service.dto.DeveloperDTO;
 import lombok.RequiredArgsConstructor;
@@ -108,11 +109,11 @@ public class DeveloperService {
         developerProjectService.updateDeveloperProject(developerProjectKeys);
     }
 
-    public List<Developer> getJavaDevelopers() {
-        return developerDAO.getJavaDevelopers();
+    public List<Developer> getDevelopersByLanguage(String language) {
+        return developerDAO.getDevelopersByLanguage(language);
     }
 
-    public List<Developer> getMiddleDevelopers() {
-        return developerDAO.getMiddleDevelopers();
+    public List<Developer> getDevelopersByLevel(Level level) {
+        return developerDAO.getDevelopersByLevel(level);
     }
 }

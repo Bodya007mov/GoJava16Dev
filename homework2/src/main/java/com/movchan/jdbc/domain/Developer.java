@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,9 +19,9 @@ public class Developer {
 
     private Sex sex;
 
-    private Double salary;
+    private BigDecimal salary;
 
-    public Developer(String name, Integer age, Sex sex, Double salary) {
+    public Developer(String name, Integer age, Sex sex, BigDecimal salary) {
         this.name = name;
         this.age = age;
         this.sex = sex;

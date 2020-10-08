@@ -152,7 +152,7 @@ values
 (4, 2);
 
 alter table developers
-    add salary integer;
+    add salary double precision;
 
 update developers
 set salary = 50000
@@ -174,7 +174,7 @@ set salary = 25000
 where id = 6;
 
 alter table projects
-    add cost integer;
+    add cost double precision;
 
 update projects
 set cost = 35000

@@ -1,6 +1,7 @@
 package com.movchan.jdbc;
 
 import com.movchan.jdbc.dao.*;
+import com.movchan.jdbc.domain.Level;
 import com.movchan.jdbc.service.*;
 
 import java.text.SimpleDateFormat;
@@ -21,8 +22,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(projectService.getTotalSalaryByProjectId(1L));
         System.out.println(projectService.getDevelopersByProjectId(1L));
-        System.out.println(developerService.getJavaDevelopers());
-        System.out.println(developerService.getMiddleDevelopers());
+        System.out.println(developerService.getDevelopersByLanguage("Java"));
+        System.out.println(developerService.getDevelopersByLevel(Level.MIDDLE));
         System.out.println(projectService.getProjectDTOs());
     }
 }

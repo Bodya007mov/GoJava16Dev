@@ -1,6 +1,7 @@
 package com.movchan.jdbc.dao;
 
 import com.movchan.jdbc.domain.Developer;
+import com.movchan.jdbc.domain.Level;
 import com.movchan.jdbc.domain.Sex;
 import com.movchan.jdbc.error.EntityNotFoundException;
 
@@ -61,7 +62,7 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
             statement.setString(1, developer.getName());
             statement.setInt(2, developer.getAge());
             statement.setString(3, developer.getSex().toString().toLowerCase());
-            statement.setDouble(4, developer.getSalary());
+            statement.setBigDecimal(4, developer.getSalary());
             statement.executeUpdate();
             if (statement.getGeneratedKeys().next()) {
                 Long st = statement.getGeneratedKeys().getLong(1);
@@ -80,7 +81,7 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
             statement.setString(1, developer.getName());
             statement.setInt(2, developer.getAge());
             statement.setString(3, developer.getSex().toString().toLowerCase());
-            statement.setDouble(4, developer.getSalary());
+            statement.setBigDecimal(4, developer.getSalary());
             statement.setLong(5, developer.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -94,19 +95,20 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
         developer.setName(resultSet.getString("developer_name"));
         developer.setAge(resultSet.getInt("age"));
         developer.setSex(Sex.valueOf(resultSet.getString("sex").toUpperCase()));
-        developer.setSalary(resultSet.getDouble("salary"));
+        developer.setSalary(resultSet.getBigDecimal("salary"));
         return developer;
     }
 
-    public List<Developer> getJavaDevelopers() {
+    public List<Developer> getDevelopersByLanguage(String language) {
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
+            PreparedStatement statement = connection.prepareStatement("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
                     "from developers d " +
                     "         join developers_skills ds on d.id = ds.developer_id " +
                     "         join skills s on ds.skill_id = s.id " +
                     "         join languages l on s.language_id = l.id " +
-                    "where l.name = 'Java';");
+                    "where l.name = ?;")) {
+            statement.setString(1, language);
+            ResultSet resultSet = statement.executeQuery();
             List<Developer> developers = new ArrayList<>();
             while(resultSet.next()) {
                 Developer developer = getDeveloperFromResultSet(resultSet);
@@ -118,14 +120,15 @@ public class DeveloperDAO extends GenericDAO<Developer, Long> {
         }
     }
 
-    public List<Developer> getMiddleDevelopers() {
+    public List<Developer> getDevelopersByLevel(Level level) {
         try (Connection connection = DriverManager.getConnection(URL, username, password);
-             Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
+            PreparedStatement statement = connection.prepareStatement("select d.id as developer_id, d.name as developer_name, age, sex, salary " +
                     "from developers d " +
                     "         join developers_skills ds on d.id = ds.developer_id " +
                     "         join skills s on ds.skill_id = s.id " +
-                    "where s.level = 'middle';");
+                    "where s.level = cast(? as level_type);")) {
+            statement.setString(1, level.toString().toLowerCase());
+            ResultSet resultSet = statement.executeQuery();
             List<Developer> developers = new ArrayList<>();
             while(resultSet.next()) {
                 Developer developer = getDeveloperFromResultSet(resultSet);

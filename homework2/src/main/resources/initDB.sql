@@ -31,7 +31,7 @@ create table projects
 (
     id serial primary key,
     name varchar(50),
-    deadline date
+    creation_date date
 );
 
 drop table if exists companies cascade;
@@ -134,7 +134,7 @@ values
 ('Global Logic', '380632365875'),
 ('LuxSoft', '380505321569');
 
-insert into projects (name, deadline, company_id, customer_id)
+insert into projects (name, creation_date, company_id, customer_id)
 values
 ('online store', '10/09/2020', 1, 3),
 ('mobile application', '30/08/2020', 2, 4),
@@ -152,7 +152,7 @@ values
 (4, 2);
 
 alter table developers
-    add salary integer;
+    add salary double precision;
 
 update developers
 set salary = 50000
@@ -172,3 +172,20 @@ where id = 5;
 update developers
 set salary = 25000
 where id = 6;
+
+alter table projects
+    add cost double precision;
+
+update projects
+set cost = 35000
+where id = 1;
+update projects
+set cost = 100000
+where id = 2;
+update projects
+set cost = 50000
+where id = 3;
+update projects
+set cost = 45000
+where id = 4;
+

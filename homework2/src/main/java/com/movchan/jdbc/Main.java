@@ -1,33 +1,29 @@
 package com.movchan.jdbc;
 
-import com.movchan.jdbc.dao.DeveloperDAO;
-import com.movchan.jdbc.dao.DeveloperSkillDAO;
-import com.movchan.jdbc.domain.Developer;
-import com.movchan.jdbc.domain.Sex;
-import com.movchan.jdbc.service.DeveloperDTO;
-import com.movchan.jdbc.service.DeveloperService;
-import com.movchan.jdbc.service.DeveloperSkillService;
+import com.movchan.jdbc.dao.*;
+import com.movchan.jdbc.domain.Level;
+import com.movchan.jdbc.service.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 public class Main {
 
-    private static final DeveloperService developerService = new DeveloperService(new DeveloperDAO(), new DeveloperSkillService(new DeveloperSkillDAO()));
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    private static final DeveloperService developerService = new DeveloperService(new DeveloperDAO(), new DeveloperSkillService(new DeveloperSkillDAO()), new DeveloperProjectService(new DeveloperProjectDAO()));
+    private static final DeveloperSkillService developerSkillService = new DeveloperSkillService(new DeveloperSkillDAO());
+    private static final SkillService skillService = new SkillService(new SkillDAO());
+    private static final LanguageService languageService = new LanguageService(new LanguageDAO());
+    private static final DeveloperProjectService developerProjectService = new DeveloperProjectService(new DeveloperProjectDAO());
+    private static final ProjectService projectService = new ProjectService(new ProjectDAO());
+    private static final CompanyService companyService = new CompanyService(new CompanyDAO());
+    private static final CustomerService customerService = new CustomerService(new CustomerDAO());
 
     public static void main(String[] args) {
-//        Long testId;
-//        System.out.println(testId = developerService.createDeveloper(new Developer("test", 50, Sex.FEMALE, 100000.0)));
-//        System.out.println(developerService.getAllDevelopers());
-//        developerService.updateDeveloper(new Developer(testId, "testNew1", 51, Sex.MALE, 100.0));
-//        System.out.println(developerService.getAllDevelopers());
-//        System.out.println(developerService.getDeveloperById(1L));
-//        System.out.println(developerService.getAllDevelopers());
-//        List<Long> skills = new ArrayList<>();
-//        skills.add(5L);
-//        skills.add(6L);
-//        skills.add(7L);
-//        developerService.createDeveloper(new DeveloperDTO("test!!!", 666, Sex.MALE, 6666D, skills));
-        developerService.deleteDeveloperById(7L);
+        System.out.println(projectService.getTotalSalaryByProjectId(1L));
+        System.out.println(projectService.getDevelopersByProjectId(1L));
+        System.out.println(developerService.getDevelopersByLanguage("Java"));
+        System.out.println(developerService.getDevelopersByLevel(Level.MIDDLE));
+        System.out.println(projectService.getProjectDTOs());
     }
 }

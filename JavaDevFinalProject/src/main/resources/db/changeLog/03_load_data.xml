@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="01" author="bmovchan">
+        <loadData tableName="transport_types"
+                  file="db/data/transport-types.csv"
+                  separator="~"/>
+        <loadData tableName="body_types"
+                  file="db/data/body-types.csv"
+                  separator="~"/>
+        <loadData tableName="marks"
+                  file="db/data/mark-types.csv"
+                  separator="~"/>
+        <loadData tableName="models"
+                  file="db/data/model-types.csv"
+                  separator="~"/>
+    </changeSet>
+</databaseChangeLog>

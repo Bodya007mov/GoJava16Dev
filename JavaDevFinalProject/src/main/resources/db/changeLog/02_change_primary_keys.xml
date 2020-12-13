@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="01" author="bmovchan">
+        <dropPrimaryKey tableName="body_types"/>
+        <addPrimaryKey tableName="body_types" columnNames="id, name, category_id"/>
+        <dropPrimaryKey tableName="marks"/>
+        <addPrimaryKey tableName="marks" columnNames="id, name, category_id"/>
+        <dropPrimaryKey tableName="models"/>
+        <addPrimaryKey tableName="models" columnNames="id, name, category_id, mark_id"/>
+    </changeSet>
+</databaseChangeLog>
